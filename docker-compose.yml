@@ -1,0 +1,31 @@
+#menggunakan schema version 3.8
+version: '3.8'
+
+#definisi service yang diperlukan 
+services:
+
+  #membuat service dengan nama item-app
+  item-app:
+    #menggunakan image item-app dari github package container registri
+    image: ghcr.io/yfakhri/item-app
+    #port mapping ke host 80 dari aplikasi port 8080
+    ports:
+      - "80:8080"
+    #memastikan service ini berjalan setelah item-db
+    depends_on:
+      - item-db
+    #restart policy bahwa container akan selalu melakukan restart ketika terhendi
+    restart: always
+  
+  #membuat service dengan nama item-db
+  item-db:
+    #menggunakan base image mongo:3
+    image: mongo:3
+    #memakai volume app-db yang di mount ke target /data/db
+    volumes:
+      - app-db:/data/db
+
+#membuat volumes
+volumes:
+  #volumes bernama app-db
+  app-db:
