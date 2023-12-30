@@ -41,11 +41,16 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
+      # checkout ke branch
       - checkout
+      # setup remote docker untuk digunakan
       - setup_remote_docker
+      #menjalankan perintah untuk build image
       - run:
           name: Build Image
           command: docker build -t ghcr.io/yfakhri/karsajobs:latest .
+      
+      #menjalankan perintah untuk push image
       - run:
           name: Push Image
           command: |
