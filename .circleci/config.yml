@@ -6,6 +6,8 @@ version: 2.1
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
   lint-dockerfile:
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - run:
@@ -14,6 +16,9 @@ jobs:
             curl -sL -o hadolint "https://github.com/hadolint/hadolint/releases/latest/download/hadolint-$(uname -s)-$(uname -m)" && \
             chmod +x hadolint && \
             sudo mv hadolint /usr/local/bin/
+      - run:
+          name: Run Hadolint
+          command: hadolint Dockerfile
 workflows:
   lint-dockerfile:
     jobs:
