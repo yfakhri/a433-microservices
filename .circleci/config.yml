@@ -49,4 +49,4 @@ workflows:
   lint-test-and-build-karsajobs-ui:
     jobs:
       - lint-dockerfile
-      - build-app-karsajobs
+      - build-app-karsajobs-ui
