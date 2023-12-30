@@ -1,0 +1,52 @@
+# menggunakan circleci pipeline engine versi 2.1
+version: 2.1
+
+# definisikan job yang akan dijalankan
+jobs:
+  # job lint-dockerfile
+  lint-dockerfile:
+    #menggunakan image cimg/base:stable sebagai executor
+    docker:
+      - image: cimg/base:stable
+    steps:
+      # checkout ke branch
+      - checkout
+      #menjalankan perintah untuk install hadolint
+      - run:
+          name: Install Hadolint
+          command: |
+            curl -sL -o hadolint "https://github.com/hadolint/hadolint/releases/latest/download/hadolint-$(uname -s)-$(uname -m)" && \
+            chmod +x hadolint && \
+            sudo mv hadolint /usr/local/bin/
+      # menjalankan perintah eksekusi hadolint untuk berkas dockerfile
+      - run:
+          name: Run Hadolint
+          command: hadolint Dockerfile
+
+  # job untuk build dan push image
+  build-app-karsajobs-ui:
+    # menggunakan image cimg/base:stable
+    docker:
+      - image: cimg/base:stable
+    steps:
+      # checkout ke branch
+      - checkout
+      # setup remote docker untuk digunakan
+      - setup_remote_docker
+      #menjalankan perintah untuk build image
+      - run:
+          name: Build Image
+          command: docker build -t ghcr.io/yfakhri/karsajobs-ui:latest .
+      
+      #menjalankan perintah untuk push image
+      - run:
+          name: Push Image
+          command: |
+            echo $GITHUB_TOKEN | docker login ghcr.io -u yfakhri --password-stdin
+            docker push ghcr.io/yfakhri/karsajobs-ui:latest
+
+workflows:
+  lint-test-and-build-karsajobs-ui:
+    jobs:
+      - lint-dockerfile
+      - build-app-karsajobs
