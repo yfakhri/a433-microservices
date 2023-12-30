@@ -42,6 +42,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Image
           command: docker build -t ghcr.io/yfakhri/karsajobs:latest .
