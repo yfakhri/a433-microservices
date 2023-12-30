@@ -19,7 +19,17 @@ jobs:
       - run:
           name: Run Hadolint
           command: hadolint Dockerfile
+  test-app:
+    docker:
+      - image: cimg/go:1.21.5
+    steps: 
+      - checkout
+      - run:
+          name: Testing Application
+          command: go test -v -short --count=1 $(go list ./...)
+
 workflows:
   lint-dockerfile:
     jobs:
       - lint-dockerfile
+      - test-app
